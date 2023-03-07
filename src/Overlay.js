@@ -1,8 +1,6 @@
 const St = imports.gi.St;
 const Clutter = imports.gi.Clutter;
 const Pango = imports.gi.Pango;
-const Gio = imports.gi.Gio;
-const GLib = imports.gi.GLib;
 
 const Mainloop = imports.mainloop;
 const Main = imports.ui.main;
@@ -182,5 +180,9 @@ var Overlay = class Overlay {
 
     isVisible() {
         return this.overlay.visible;
+    }
+
+    destroy() {
+        this.overlay.destroy();
     }
 }

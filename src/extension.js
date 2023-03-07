@@ -1,10 +1,6 @@
 const GObject = imports.gi.GObject;
 const St = imports.gi.St;
-const Clutter = imports.gi.Clutter;
 const Shell = imports.gi.Shell;
-
-const Lang = imports.lang;
-const Mainloop = imports.mainloop;
 
 const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
@@ -13,12 +9,9 @@ const PopupMenu = imports.ui.popupMenu;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
-const {OpenAiClient} = Me.imports.OpenAiClient;
 const {Overlay} = Me.imports.Overlay;
 
 const INDICATOR_ICON = 'face-smile-symbolic';
-
-const openaiClient = new OpenAiClient();
 
 let chatGptIndicator;
 let overlay;
@@ -42,14 +35,13 @@ const ChatGptIndicator = GObject.registerClass(
         }
 
         _buildMenu() {
-
             let menuItemToggle = new PopupMenu.PopupMenuItem(_('Toggle'));
             this.menu.addMenuItem(menuItemToggle);
-            menuItemToggle.connect('activate', Lang.bind(this, this._onTogglePress));
+            menuItemToggle.connect('activate', this._onTogglePress);
 
             let menuItemPrefs = new PopupMenu.PopupMenuItem(_('Settings'));
             this.menu.addMenuItem(menuItemPrefs);
-            menuItemPrefs.connect('activate', Lang.bind(this, this._onPrefsPress));
+            menuItemPrefs.connect('activate', this._onPrefsPress);
         }
 
         _onTogglePress() {
@@ -65,6 +57,7 @@ const ChatGptIndicator = GObject.registerClass(
         }
 
         destroy() {
+            overlay.destroy();
             super.destroy();
         }
     }
