@@ -1,6 +1,6 @@
 # ChatGPT / OpenAI GNOME Extension
 
-![screenshot-panel.png](docs/screenshot-panel.png)
+![screenshot-overlay.png](docs/screenshot-overlay.png)
 ![screenshot-desktop.png](docs/screenshot-desktop.png)
 
 ## ChatGPT Overlay for GNOME Shell
