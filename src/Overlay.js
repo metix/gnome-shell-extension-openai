@@ -70,7 +70,6 @@ var Overlay = class Overlay {
             enable_mouse_scrolling: true,
             vscrollbar_policy: St.PolicyType.ALWAYS,
             hscrollbar_policy: St.PolicyType.NEVER,
-            y_align: St.Align.START,
             overlay_scrollbars: false,
             y_expand: true,
             x_expand: true
@@ -81,8 +80,7 @@ var Overlay = class Overlay {
         this.chatContainer = new St.BoxLayout({
             vertical: true,
             x_expand: true,
-            y_expand: true,
-            y_align: Clutter.ActorAlign.START,
+            y_expand: false,
         });
 
         this.chatScroller.add_actor(this.chatContainer);
@@ -111,7 +109,7 @@ var Overlay = class Overlay {
         let question = this.inputQuestion.text;
 
         openaiClient.ask(question).then(answer => {
-            let chat = "You: " + question.trim() + "\n\n" + "AI: " + answer.trim();
+            let chat = "<b>You:</b> " + question.trim() + "\n\n" + "<b>AI:</b> " + answer.trim();
 
             this.inputQuestion.set_text("");
 
@@ -126,34 +124,52 @@ var Overlay = class Overlay {
     }
 
     _appendChatMessage(msg) {
-        let chatEntry = new St.Entry({
-            style_class: 'chat-entry',
-            text: msg
+        let chatEntry = new Clutter.Text({
+            text: msg,
+            single_line_mode: false,
+            line_wrap: true,
+            line_wrap_mode: Pango.WrapMode.WORD,
+            editable: false,
+            selectable: true,
+            margin_top: 10,
+            margin_left: 10,
+            font_name: "Sans 10",
+            margin_right: 10,
+            margin_bottom: 10,
+            cursor_visible: true,
+            use_markup: true,
+            color: new Clutter.Color({red: 50, green: 50, blue: 50, alpha: 255}),
+            selection_color: new Clutter.Color({red: 255, green: 153, blue: 51, alpha: 100}),
+            reactive: true
+        })
+
+        chatEntry.connect('key-press-event', (object, event) => {
+            let symbol = event.get_key_symbol();
+            let code = event.get_key_code();
+            let state = event.get_state();
+
+            // Ctrl + A
+            if (state == 4 && code == 38) {
+                object.set_selection(0, object.text.length);
+                return true;
+            }
+            // Ctrl + C
+            else if (state == 4 && code == 54) {
+                let clipboard = St.Clipboard.get_default();
+                let selection = object.get_selection();
+                clipboard.set_text(St.ClipboardType.CLIPBOARD, selection);
+                return true;
+            }
         });
 
-        chatEntry.clutter_text.set_single_line_mode(false);
-        chatEntry.clutter_text.set_use_markup(false);
-        chatEntry.clutter_text.set_activatable(true);
-        chatEntry.clutter_text.set_line_wrap(true);
-        chatEntry.clutter_text.set_ellipsize(Pango.EllipsizeMode.NONE);
-        chatEntry.clutter_text.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR);
-        chatEntry.clutter_text.set_editable(false);
-        chatEntry.clutter_text.set_max_length(0);
-
-        let chatEntryContainer = new St.BoxLayout({
-            vertical: true,
-            y_expand: true
+        let chatEntryContainer = new St.Bin({
+            style_class: "chat-entry-container"
         });
-
-        chatEntryContainer.add_child(chatEntry);
+        chatEntryContainer.add_actor(chatEntry);
 
         this.chatContainer.add(chatEntryContainer);
 
-        // workaround. otherwise the chatEntry
-        // gets smaller if the scroll container is filled
-        chatEntryContainer.height = chatEntry.height;
-
-        Util.ensureActorVisibleInScrollView(this.chatScroller, chatEntryContainer)
+        Util.ensureActorVisibleInScrollView(this.chatScroller, chatEntry);
     }
 
     _onClearHistoryPress() {

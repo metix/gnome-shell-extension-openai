@@ -1,4 +1,4 @@
-const {Soup, GLib} = imports.gi;
+const {Soup} = imports.gi;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -22,8 +22,17 @@ var OpenAiClient = class OpenAiClient {
             let debugMode = Utils.getSettings().get_boolean("debug-mode");
 
             if (debugMode) {
+
+                let test = "";
+
+                for (let i = 0; i < 100; i++) {
+                    test += "afasf ";
+                }
+
                 setTimeout(() => {
-                    resolve("Hi, I am not chat-GPT i'm just a test response. testing this extension\nbody:\n" + body)
+                    resolve(`Hi, I am not chat-GPT i'm just a test response. ${test} testing this extension
+body:
+${body}`)
                 }, 500)
 
                 return;

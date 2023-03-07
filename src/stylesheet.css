@@ -24,10 +24,11 @@
     background: #ddd;
 }
 
-.chat-entry {
+.chat-entry-container {
+    background: #fff;
     margin-left: 10px;
     margin-right: 10px;
     margin-top: 10px;
 
-    border: none;
+    border-radius: 10px;
 }
