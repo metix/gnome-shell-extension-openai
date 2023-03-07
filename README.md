@@ -1,6 +1,7 @@
 # ChatGPT / OpenAI Gnome Extension
 
-![screenshot.png](docs/screenshot.png)
+![screenshot-panel.png](docs/screenshot-panel.png)
+![screenshot-desktop.png](docs/screenshot-desktop.png)
 ChatGPT-Gnome is a simple extension that uses the OpenAI API to display a ChatGPT Overlay by pressing
 
 `Super + S`.
