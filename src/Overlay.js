@@ -20,8 +20,8 @@ const OVERLAY_WIDTH = 1000;
 const ICON_LOADING_FINISHED = "object-select-symbolic";
 const ICON_LOADING = "content-loading-symbolic"
 
-var TextView = GObject.registerClass(
-    class TextView extends St.Bin {
+var ChatMessage = GObject.registerClass(
+    class ChatMessage extends St.Bin {
         _init(params) {
             super._init({
                 style_class: 'message'
@@ -89,6 +89,7 @@ var Overlay = class Overlay {
         this.overlay.width = OVERLAY_WIDTH;
         this.overlay.height = OVERLAY_HEIGHT;
         this.overlay.visible = false;
+
         Main.layoutManager.addChrome(this.overlay, {affectsInputRegion: true});
 
         // display the overlay in the center of the screen
@@ -98,7 +99,13 @@ var Overlay = class Overlay {
             monitor.y + Math.floor(monitor.height / 2 - this.overlay.height / 2)
         );
 
-        this.inputContainer = new St.BoxLayout({
+        this._buildQuestionRow();
+        this._buildChatRow();
+        this._buildMenuRow();
+    }
+
+    _buildQuestionRow() {
+        this.questionRow = new St.BoxLayout({
             style_class: 'input-container',
             vertical: false,
             x_expand: true
@@ -123,20 +130,22 @@ var Overlay = class Overlay {
             }
         });
 
-        this.inputContainer.add(this.inputQuestion);
+        this.questionRow.add(this.inputQuestion);
 
         this.loadingSpinner = new St.Icon({
             icon_name: ICON_LOADING_FINISHED,
             icon_size: 30
         });
 
-        this.inputContainer.add(this.loadingSpinner);
+        this.questionRow.add(this.loadingSpinner);
 
         this.inputQuestion.clutter_text.connect('activate', this._onQuestionEnter.bind(this));
 
-        this.overlay.add_child(this.inputContainer);
+        this.overlay.add_child(this.questionRow);
+    }
 
-        this.chatScroller = new St.ScrollView({
+    _buildChatRow() {
+        this.chatRow = new St.ScrollView({
             style_class: 'vfade',
             enable_mouse_scrolling: true,
             vscrollbar_policy: St.PolicyType.ALWAYS,
@@ -146,7 +155,7 @@ var Overlay = class Overlay {
             x_expand: true
         });
 
-        this.overlay.add_child(this.chatScroller);
+        this.overlay.add_child(this.chatRow);
 
         this.chatContainer = new St.BoxLayout({
             vertical: true,
@@ -154,9 +163,11 @@ var Overlay = class Overlay {
             y_expand: false,
         });
 
-        this.chatScroller.add_actor(this.chatContainer);
+        this.chatRow.add_actor(this.chatContainer);
+    }
 
-        this.controlsContainer = new St.BoxLayout({
+    _buildMenuRow() {
+        this.menuRow = new St.BoxLayout({
             style_class: 'controls-container',
             vertical: false
         });
@@ -168,9 +179,9 @@ var Overlay = class Overlay {
 
         this.btnClearHistory.connect('button-press-event', this._onClearHistoryPress.bind(this));
 
-        this.controlsContainer.add_child(this.btnClearHistory);
+        this.menuRow.add_child(this.btnClearHistory);
 
-        this.overlay.add_child(this.controlsContainer);
+        this.overlay.add_child(this.menuRow);
     }
 
     _onQuestionEnter() {
@@ -195,7 +206,7 @@ var Overlay = class Overlay {
     }
 
     _appendChatMessage(msg) {
-        let chatEntry = new TextView({
+        let chatEntry = new ChatMessage({
             text: msg
         });
 
@@ -206,7 +217,7 @@ var Overlay = class Overlay {
 
         this.chatContainer.add(chatEntryContainer);
 
-        Util.ensureActorVisibleInScrollView(this.chatScroller, chatEntry);
+        Util.ensureActorVisibleInScrollView(this.chatRow, chatEntry);
     }
 
     _onClearHistoryPress() {

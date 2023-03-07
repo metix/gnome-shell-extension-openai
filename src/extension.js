@@ -11,7 +11,7 @@ const Me = ExtensionUtils.getCurrentExtension();
 
 const {Overlay} = Me.imports.Overlay;
 
-const INDICATOR_ICON = 'face-smile-symbolic';
+const INDICATOR_ICON = "face-smile-symbolic";
 
 let chatGptIndicator;
 let overlay;
@@ -26,7 +26,7 @@ const ChatGptIndicator = GObject.registerClass(
 
             this.icon = new St.Icon({
                 icon_name: INDICATOR_ICON,
-                style_class: 'system-status-icon'
+                style_class: "system-status-icon"
             });
             hbox.add_child(this.icon);
             this.add_child(hbox);
@@ -35,13 +35,13 @@ const ChatGptIndicator = GObject.registerClass(
         }
 
         _buildMenu() {
-            let menuItemToggle = new PopupMenu.PopupMenuItem(_('Toggle'));
+            let menuItemToggle = new PopupMenu.PopupMenuItem("Toggle");
             this.menu.addMenuItem(menuItemToggle);
-            menuItemToggle.connect('activate', this._onTogglePress);
+            menuItemToggle.connect("activate", this._onTogglePress);
 
-            let menuItemPrefs = new PopupMenu.PopupMenuItem(_('Settings'));
+            let menuItemPrefs = new PopupMenu.PopupMenuItem("Settings");
             this.menu.addMenuItem(menuItemPrefs);
-            menuItemPrefs.connect('activate', this._onPrefsPress);
+            menuItemPrefs.connect("activate", this._onPrefsPress);
         }
 
         _onTogglePress() {
@@ -55,11 +55,6 @@ const ChatGptIndicator = GObject.registerClass(
             overlay.hide();
             ExtensionUtils.openPrefs();
         }
-
-        destroy() {
-            overlay.destroy();
-            super.destroy();
-        }
     }
 )
 
@@ -70,11 +65,14 @@ function init() {
 
 
 function enable() {
+    // the overlay which opens when shortcut is pressed
     overlay = new Overlay();
-    chatGptIndicator = new ChatGptIndicator();
-    Main.panel.addToStatusArea('ChatGptIndicator', chatGptIndicator, 1);
 
-    // setup shortcut "Super + S"
+    // indicator in the status-menu
+    chatGptIndicator = new ChatGptIndicator();
+    Main.panel.addToStatusArea("ChatGptIndicator", chatGptIndicator, 1);
+
+    // register shortcut "Super + S"
     Main.overview._specialToggle = function (evt) {
         chatGptIndicator._onTogglePress();
     };
@@ -87,5 +85,8 @@ function enable() {
 
 function disable() {
     chatGptIndicator.destroy();
+    overlay.destroy();
+
     chatGptIndicator = null;
+    overlay = null;
 }
