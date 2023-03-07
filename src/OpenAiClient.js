@@ -6,8 +6,6 @@ const Utils = Me.imports.Utils;
 
 const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
 
-const testing = false;
-
 var OpenAiClient = class OpenAiClient {
 
     constructor() {
@@ -21,10 +19,12 @@ var OpenAiClient = class OpenAiClient {
                 messages: [...this.chatHistory, {role: 'user', content: question}]
             });
 
-            if (testing) {
+            let debugMode = Utils.getSettings().get_boolean("debug-mode");
+
+            if (debugMode) {
                 setTimeout(() => {
                     resolve("Hi, I am not chat-GPT i'm just a test response. testing this extension\nbody:\n" + body)
-                }, 2000)
+                }, 500)
 
                 return;
             }

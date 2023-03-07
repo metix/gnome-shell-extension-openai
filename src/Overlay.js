@@ -73,7 +73,7 @@ var Overlay = class Overlay {
             vscrollbar_policy: St.PolicyType.ALWAYS,
             hscrollbar_policy: St.PolicyType.NEVER,
             y_align: St.Align.START,
-            overlay_scrollbars: true,
+            overlay_scrollbars: false,
             y_expand: true,
             x_expand: true
         });
@@ -117,17 +117,17 @@ var Overlay = class Overlay {
 
             this.inputQuestion.set_text("");
 
-            this._addChat(chat);
+            this._appendChatMessage(chat);
 
         }).catch(error => {
             console.error(error);
-            this._addChat("Error while try to access OpenAI: " + error);
+            this._appendChatMessage("Error while try to access OpenAI: " + error);
         }).finally(() => {
             this.loadingSpinner.set_icon_name(ICON_LOADING_FINISHED);
         })
     }
 
-    _addChat(msg) {
+    _appendChatMessage(msg) {
         let chatEntry = new St.Entry({
             style_class: 'chat-entry',
             text: msg

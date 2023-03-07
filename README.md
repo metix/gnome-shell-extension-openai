@@ -29,5 +29,5 @@ gnome-extensions prefs openai-gnome@etixsoftware.de
 ```
 
 ## Support
-The Extension is tested on:
+The Extension was tested on:
 - Ubuntu 22.04

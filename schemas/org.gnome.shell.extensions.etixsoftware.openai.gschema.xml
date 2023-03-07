@@ -5,5 +5,9 @@
     <key name="openai-api-key" type="s">
       <default>'your api key'</default>
     </key>
+
+    <key name="debug-mode" type="b">
+      <default>false</default>
+    </key>
   </schema>
 </schemalist>
