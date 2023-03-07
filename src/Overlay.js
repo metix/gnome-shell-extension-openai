@@ -1,3 +1,4 @@
+const GObject = imports.gi.GObject;
 const St = imports.gi.St;
 const Clutter = imports.gi.Clutter;
 const Pango = imports.gi.Pango;
@@ -8,6 +9,7 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Util = imports.misc.util;
 
 const Me = ExtensionUtils.getCurrentExtension();
+const Utils = Me.imports.Utils;
 
 const {OpenAiClient} = Me.imports.OpenAiClient;
 const openaiClient = new OpenAiClient();
@@ -18,11 +20,69 @@ const OVERLAY_WIDTH = 1000;
 const ICON_LOADING_FINISHED = "object-select-symbolic";
 const ICON_LOADING = "content-loading-symbolic"
 
+var TextView = GObject.registerClass(
+    class TextView extends St.Bin {
+        _init(params) {
+            super._init({
+                style_class: 'message'
+            });
+
+            this._text = new Clutter.Text({
+                text: params.text,
+                single_line_mode: false,
+                line_wrap: true,
+                line_wrap_mode: Pango.WrapMode.WORD,
+                editable: false,
+                selectable: true,
+                margin_top: 10,
+                margin_left: 10,
+                font_name: "Sans 10",
+                margin_right: 10,
+                margin_bottom: 10,
+                cursor_visible: true,
+                use_markup: true,
+                selection_color: new Clutter.Color({red: 255, green: 153, blue: 51, alpha: 100}),
+                reactive: true
+            })
+
+            this.connect('key-press-event', (object, event) => {
+                let code = event.get_key_code();
+                let state = event.get_state();
+
+                // Ctrl + A
+                if (state === 4 && code === 38) {
+                    object.set_selection(0, object.text.length);
+                    return true;
+                }
+                // Ctrl + C
+                else if (state === 4 && code === 54) {
+                    let clipboard = St.Clipboard.get_default();
+                    let selection = object.get_selection();
+                    clipboard.set_text(St.ClipboardType.CLIPBOARD, selection);
+                    return true;
+                }
+            });
+
+            this.add_actor(this._text);
+        }
+
+        vfunc_paint(paint_context) {
+            super.vfunc_paint(paint_context);
+
+            if (Utils.isGnomeDarkModeEnabled()) {
+                this._text.color = new Clutter.Color({red: 200, green: 200, blue: 200, alpha: 255})
+            } else {
+                this._text.color = new Clutter.Color({red: 20, green: 20, blue: 20, alpha: 255})
+            }
+        }
+    }
+)
+
 var Overlay = class Overlay {
 
     constructor() {
         this.overlay = new St.BoxLayout({
-            style_class: 'overlay',
+            style_class: 'modal-dialog',
             vertical: true
         });
 
@@ -135,44 +195,8 @@ var Overlay = class Overlay {
     }
 
     _appendChatMessage(msg) {
-        let chatEntry = new Clutter.Text({
-            text: msg,
-            single_line_mode: false,
-            line_wrap: true,
-            line_wrap_mode: Pango.WrapMode.WORD,
-            editable: false,
-            selectable: true,
-            margin_top: 10,
-            margin_left: 10,
-            font_name: "Sans 10",
-            margin_right: 10,
-            margin_bottom: 10,
-            cursor_visible: true,
-            use_markup: true,
-            color: new Clutter.Color({red: 50, green: 50, blue: 50, alpha: 255}),
-            selection_color: new Clutter.Color({red: 255, green: 153, blue: 51, alpha: 100}),
-            reactive: true
-        })
-
-        chatEntry.connect('key-press-event', (object, event) => {
-            let symbol = event.get_key_symbol();
-            let code = event.get_key_code();
-            let state = event.get_state();
-
-            console.log("code: " + code);
-
-            // Ctrl + A
-            if (state === 4 && code === 38) {
-                object.set_selection(0, object.text.length);
-                return true;
-            }
-            // Ctrl + C
-            else if (state === 4 && code === 54) {
-                let clipboard = St.Clipboard.get_default();
-                let selection = object.get_selection();
-                clipboard.set_text(St.ClipboardType.CLIPBOARD, selection);
-                return true;
-            }
+        let chatEntry = new TextView({
+            text: msg
         });
 
         let chatEntryContainer = new St.Bin({
