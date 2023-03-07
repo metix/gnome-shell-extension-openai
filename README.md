@@ -15,8 +15,8 @@ However, if you don't have an API token or would rather not use one, there is an
 This method installs to your `~/.local/share/gnome-shell/extensions` directory from the latest source code on the main branch.
 
 ```bash
-git clone https://gitlab.com/skrewball/openweather.git
-cd chatgpt-gnome
+git clone https://github.com/metix/gnome-shell-extension-openai
+cd gnome-shell-extension-openai
 make install
 
 # -> restart gnome shell (ALT+F2, then type 'r') if extension is not loaded
