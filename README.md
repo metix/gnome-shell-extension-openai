@@ -14,7 +14,7 @@ However, if you don't have an API token or would rather not use one, there is an
 ## Install From Source
 This method installs to your `~/.local/share/gnome-shell/extensions` directory from the latest source code on the main branch.
 
-Clone this Repository:
+Clone this repository:
 ```bash
 git clone https://github.com/metix/gnome-shell-extension-openai && cd gnome-shell-extension-openai
 ```
@@ -24,12 +24,11 @@ Install the extension:
 make install
 ```
 
-Restart GNOME Shell:
-```
--> ALT+F2, then type 'r'
-```
+Restart desktop:
+- On GNOME Shell: `ALT+F2, then type 'r'`
+- On Wayland: Log-out and Log-In again
 
-(Optional, if extension is not activated automatically):
+Enable the extension:
 ```bash
 gnome-extensions enable openai-gnome@etixsoftware.de
 ```
