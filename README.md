@@ -1,8 +1,10 @@
-# ChatGPT / OpenAI Gnome Extension
+# ChatGPT / OpenAI GNOME Extension
 
 ![screenshot-panel.png](docs/screenshot-panel.png)
 ![screenshot-desktop.png](docs/screenshot-desktop.png)
-ChatGPT-Gnome is a simple extension that uses the OpenAI API to display a ChatGPT Overlay by pressing
+
+## ChatGPT Overlay for GNOME Shell
+This is a simple extension that uses the OpenAI API to display a ChatGPT Overlay by pressing
 
 `Super + S`.
 
@@ -17,7 +19,7 @@ git clone https://gitlab.com/skrewball/openweather.git
 cd chatgpt-gnome
 make install
 
-# -> restart gnome shell (Alt+F2, then type 'r') if extension is not loaded
+# -> restart gnome shell (ALT+F2, then type 'r') if extension is not loaded
 
 # enable extension
 gnome-extensions enable openai-gnome@etixsoftware.de
@@ -31,3 +33,10 @@ gnome-extensions prefs openai-gnome@etixsoftware.de
 ## Support
 The Extension was tested on:
 - Ubuntu 22.04
+
+## Troubleshooting
+- Restart GNOME Shell (`ALT+F2`, then type `r`)
+- Look for error messages in 
+```
+journalctl /usr/bin/gnome-shell
+```
