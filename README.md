@@ -25,7 +25,7 @@ make install
 ```
 
 Restart desktop:
-- On X11: `ALT+F2, then type 'r'`
+- On X11: `ALT+F2` then type `r`
 - On Wayland: Log-out and Log-In again
 
 Enable the extension:

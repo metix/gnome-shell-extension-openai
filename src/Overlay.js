@@ -52,6 +52,17 @@ var Overlay = class Overlay {
             x_expand: true
         });
 
+        this.inputQuestion.connect('key-press-event', (object, event) => {
+            let code = event.get_key_code();
+            let state = event.get_state();
+
+            // Ctrl + L
+            if (state === 4 && code === 46) {
+                this._onClearHistoryPress();
+                return true;
+            }
+        });
+
         this.inputContainer.add(this.inputQuestion);
 
         this.loadingSpinner = new St.Icon({
@@ -148,13 +159,15 @@ var Overlay = class Overlay {
             let code = event.get_key_code();
             let state = event.get_state();
 
+            console.log("code: " + code);
+
             // Ctrl + A
-            if (state == 4 && code == 38) {
+            if (state === 4 && code === 38) {
                 object.set_selection(0, object.text.length);
                 return true;
             }
             // Ctrl + C
-            else if (state == 4 && code == 54) {
+            else if (state === 4 && code === 54) {
                 let clipboard = St.Clipboard.get_default();
                 let selection = object.get_selection();
                 clipboard.set_text(St.ClipboardType.CLIPBOARD, selection);
