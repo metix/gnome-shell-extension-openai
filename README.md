@@ -14,20 +14,34 @@ However, if you don't have an API token or would rather not use one, there is an
 ## Install From Source
 This method installs to your `~/.local/share/gnome-shell/extensions` directory from the latest source code on the main branch.
 
+Clone this Repository:
 ```bash
-git clone https://github.com/metix/gnome-shell-extension-openai
-cd gnome-shell-extension-openai
+git clone https://github.com/metix/gnome-shell-extension-openai && cd gnome-shell-extension-openai
+```
+
+Install the extension:
+```bash
 make install
+```
 
-# -> restart gnome shell (ALT+F2, then type 'r') if extension is not loaded
+Restart GNOME Shell:
+```
+-> ALT+F2, then type 'r'
+```
 
-# enable extension
+(Optional, if extension is not activated automatically):
+```bash
 gnome-extensions enable openai-gnome@etixsoftware.de
+```
 
-# open settings to configure your openai-api-key
+Configure your OpenAI-API-Key:
+```bash
 gnome-extensions prefs openai-gnome@etixsoftware.de
+```
 
-# -> Press Super+S to open the panel
+Display the Overlay with the Shortcut:
+```
+-> Super+S to open the overlay
 ```
 
 ## Support
