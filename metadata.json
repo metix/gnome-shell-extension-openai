@@ -1,0 +1,11 @@
+{
+    "shell-version": [
+        "42",
+        "43"
+    ],
+    "uuid": "openai-gnome@etixsoftware.de",
+    "name": "ChatGPT / OpenAI for Gnome",
+    "description": "ChatGPT / OpenAI Extension for Gnome. It uses your API token to access the OpenAI services.",
+    "url": ".",
+    "settings-schema":"org.gnome.shell.extensions.etixsoftware.openai"
+}

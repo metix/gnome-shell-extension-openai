@@ -1,0 +1,33 @@
+.overlay {
+    background-color: #f0f0f0;
+    border-radius: 10px;
+}
+
+.question-input {
+    border-radius: 0;
+    margin: 10px;
+}
+
+.input-container {
+    margin-right: 10px;
+}
+
+.controls-container {
+    margin: 10px;
+}
+
+.button {
+    background: #ccc;
+}
+
+.button:hover {
+    background: #ddd;
+}
+
+.chat-entry {
+    margin-left: 10px;
+    margin-right: 20px;
+    margin-top: 10px;
+
+    border: none;
+}
