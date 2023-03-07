@@ -34,14 +34,14 @@ Restart GNOME Shell:
 gnome-extensions enable openai-gnome@etixsoftware.de
 ```
 
-Configure your OpenAI-API-Key:
+Open the settings dialog and paste your OpenAI-API-Key:
 ```bash
 gnome-extensions prefs openai-gnome@etixsoftware.de
 ```
 
-Display the Overlay with the Shortcut:
+Show the overlay with the shortcut:
 ```
--> Super+S to open the overlay
+-> Super+S to show the overlay
 ```
 
 ## Support
