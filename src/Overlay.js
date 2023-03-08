@@ -118,6 +118,19 @@ var Overlay = class Overlay {
         this._buildQuestionRow();
         this._buildChatRow();
         this._buildMenuRow();
+
+        let showWelcomeBanner = Utils.getSettings().get_boolean("show-welcome-banner");
+        if (showWelcomeBanner) {
+            this._appendChatMessage("Welcome to OpenAI GNOME Extension.");
+            let token = Utils.getSettings().get_string("openai-api-key");
+            if (token.length === '')
+                this._appendChatMessage("You need a API-Key to use this extension. Please open settings dialog (or type ':settings') and paste your API-Key.");
+            this._appendChatMessage("Shortcuts:\n" +
+                "- CTRL + L\tClear History\n" +
+                "- ESC\t\tHide Overlay ")
+
+            Utils.getSettings().set_boolean("show-welcome-banner", false);
+        }
     }
 
     _buildQuestionRow() {
@@ -206,6 +219,13 @@ var Overlay = class Overlay {
 
         let question = this.inputQuestion.text;
 
+        if (question === ':settings') {
+            this.inputQuestion.set_text("");
+            this.indicator._onTogglePress();
+            ExtensionUtils.openPrefs();
+            return;
+        }
+
         openaiClient.ask(question).then(answer => {
             let chat = "<b>You:</b> " + question.trim() + "\n\n" + "<b>AI:</b> " + answer.trim();
 
@@ -246,12 +266,7 @@ var Overlay = class Overlay {
 
     show() {
         this.overlay.visible = true;
-
-        // hack: focus on question-input when overlay is shown
-        let a = Mainloop.timeout_add(50, () => {
-            global.stage.set_key_focus(this.inputQuestion);
-            Mainloop.source_remove(a);
-        });
+        global.stage.set_key_focus(this.inputQuestion);
     }
 
     hide() {

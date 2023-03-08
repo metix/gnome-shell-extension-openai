@@ -3,7 +3,7 @@
   <schema id="org.gnome.shell.extensions.etixsoftware.openai" path="/org/gnome/shell/extensions/etixsoftware/openai/">
     <!-- See also: https://docs.gtk.org/glib/gvariant-format-strings.html -->
     <key name="openai-api-key" type="s">
-      <default>'your api key'</default>
+      <default>''</default>
     </key>
 
     <key name="shortcut-toggle-overlay" type="as">
@@ -13,6 +13,10 @@
     <key name="system-prompt" type="s">
       <default>''</default>
       <summary>System prompt for ChatGPT</summary>
+    </key>
+
+    <key name="show-welcome-banner" type="b">
+      <default>true</default>
     </key>
 
     <key name="debug-mode" type="b">
