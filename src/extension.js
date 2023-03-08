@@ -1,5 +1,6 @@
 const GObject = imports.gi.GObject;
 const St = imports.gi.St;
+const Meta = imports.gi.Meta;
 const Shell = imports.gi.Shell;
 
 const Main = imports.ui.main;
@@ -10,6 +11,7 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
 const {Overlay} = Me.imports.Overlay;
+const Utils = Me.imports.Utils;
 
 const INDICATOR_ICON = "face-smile-symbolic";
 const INDICATOR_ICON_HAPPY = "face-smile-big-symbolic";
@@ -49,8 +51,7 @@ const ChatGptIndicator = GObject.registerClass(
             if (overlay.isVisible()) {
                 overlay.hide();
                 this.icon.icon_name = INDICATOR_ICON;
-            }
-            else {
+            } else {
                 overlay.show();
                 this.icon.icon_name = INDICATOR_ICON_HAPPY;
             }
@@ -77,15 +78,13 @@ function enable() {
     chatGptIndicator = new ChatGptIndicator();
     Main.panel.addToStatusArea("ChatGptIndicator", chatGptIndicator, 1);
 
-    // register shortcut "Super + S"
-    Main.overview._specialToggle = function (evt) {
-        chatGptIndicator._onTogglePress();
-    };
-    Main.wm.setCustomKeybindingHandler(
-        "toggle-overview",
-        Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW,
-        Main.overview._specialToggle.bind(this, Main.overview)
-    );
+    let settings = Utils.getSettings();
+
+    // register shortcut
+    Main.wm.addKeybinding("shortcut-toggle-overlay", settings,
+        Meta.KeyBindingFlags.NONE,
+        Shell.ActionMode.NORMAL,
+        chatGptIndicator._onTogglePress.bind(chatGptIndicator));
 }
 
 function disable() {
@@ -94,4 +93,6 @@ function disable() {
 
     chatGptIndicator = null;
     overlay = null;
+
+    Main.wm.removeKeybinding("shortcut-toggle-overlay");
 }

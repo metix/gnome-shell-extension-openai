@@ -4,7 +4,7 @@
 ## ChatGPT Overlay for GNOME Shell
 This is a simple extension that uses the OpenAI API to display a ChatGPT Overlay by pressing
 
-`Super + S`.
+`Super + Space`.
 
 Please note that this extension requires the use of the OpenAI API, meaning you must provide an API-Token to utilize it.
 However, if you don't have an API token or would rather not use one, there is an [alternative extension](https://github.com/HorrorPills/ChatGPT-Gnome-Desktop-Extension) available that utilizes Webkit to display ChatGPT in the browser.
@@ -44,7 +44,7 @@ gnome-extensions prefs openai-gnome@etixsoftware.de
 
 Show the overlay with the shortcut:
 ```
--> Super+S to show the overlay
+-> Super+Space to show the overlay
 ```
 
 ## Support

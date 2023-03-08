@@ -6,12 +6,18 @@
       <default>'your api key'</default>
     </key>
 
+    <key name="shortcut-toggle-overlay" type="as">
+      <default><![CDATA[['<Super>Space']]]></default>
+    </key>
+
     <key name="system-prompt" type="s">
       <default>''</default>
+      <summary>System prompt for ChatGPT</summary>
     </key>
 
     <key name="debug-mode" type="b">
       <default>false</default>
+      <summary>When enabled, the API is simulated</summary>
     </key>
   </schema>
 </schemalist>
