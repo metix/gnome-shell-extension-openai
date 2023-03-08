@@ -72,7 +72,15 @@ Show the overlay with the shortcut:
 
 The Extension was tested on:
 
-- Ubuntu 22.04
+- Ubuntu 22.04 with X11
+
+Feel free to contribute if you found bugs or improved something.
+
+## FAQ
+##### Where can I get an OpenAI API-Key?
+First you need to create an Account on [OpenAI](https://openai.com/blog/openai-api).
+
+From your user profile, you can manage your API keys by selecting "Manage API Keys".
 
 ## Troubleshooting
 
