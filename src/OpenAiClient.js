@@ -5,6 +5,7 @@ const Me = ExtensionUtils.getCurrentExtension();
 const Utils = Me.imports.Utils;
 
 const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
+const OPENAI_MODEL = "gpt-3.5-turbo"
 
 var OpenAiClient = class OpenAiClient {
 
@@ -14,29 +15,23 @@ var OpenAiClient = class OpenAiClient {
 
     ask(question) {
         return new Promise((resolve, reject) => {
-            let body = JSON.stringify({
-                model: 'gpt-3.5-turbo',
-                messages: [...this.chatHistory, {role: 'user', content: question}]
-            });
+            let systemPrompt = Utils.getSettings().get_string("system-prompt");
 
-            let debugMode = Utils.getSettings().get_boolean("debug-mode");
-
-            if (debugMode) {
-
-                let test = "";
-
-                for (let i = 0; i < 100; i++) {
-                    test += "afasf ";
-                }
-
-                setTimeout(() => {
-                    resolve(`Hi, I am not chat-GPT i'm just a test response. ${test} testing this extension
-body:
-${body}`)
-                }, 500)
-
-                return;
+            let messages;
+            if (systemPrompt.length > 0) {
+                messages = [
+                    {role: 'system', content: systemPrompt},
+                    ...this.chatHistory,
+                    {role: 'user', content: question}
+                ]
+            } else {
+                messages = [...this.chatHistory, {role: 'user', content: question}]
             }
+
+            let body = JSON.stringify({
+                model: OPENAI_MODEL,
+                messages: messages
+            });
 
             this._loadJsonAsync(OPENAI_API_URL, body)
                 .then(data => {
@@ -64,6 +59,28 @@ ${body}`)
 
     _loadJsonAsync(url, body) {
         return new Promise((resolve, reject) => {
+
+            let debugMode = Utils.getSettings().get_boolean("debug-mode");
+
+            if (debugMode) {
+                let parsedBody = JSON.parse(body);
+                let debugMessage = `Hi, I am not chat-GPT i'm just a test response.`;
+                if (parsedBody.messages[parsedBody.messages.length - 1].content === ':body')
+                    debugMessage = body;
+
+                setTimeout(() => {
+                    resolve({
+                        choices: [{
+                            message: {
+                                content: debugMessage
+                            }
+                        }]
+                    })
+                }, 500)
+
+                return;
+            }
+
             let httpSession = new Soup.Session();
             let message = Soup.Message.new('POST', url);
 

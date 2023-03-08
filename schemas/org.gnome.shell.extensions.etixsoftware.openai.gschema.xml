@@ -6,6 +6,10 @@
       <default>'your api key'</default>
     </key>
 
+    <key name="system-prompt" type="s">
+      <default>''</default>
+    </key>
+
     <key name="debug-mode" type="b">
       <default>false</default>
     </key>

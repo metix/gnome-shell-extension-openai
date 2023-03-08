@@ -18,9 +18,8 @@ function fillPreferencesWindow(window) {
     const group = new Adw.PreferencesGroup();
     page.add(group);
 
-    // Create a new preferences row
-    const row = new Adw.ActionRow({title: 'OpenAI-Api-Key'});
-    group.add(row);
+    const openAiApiKeyRow = new Adw.ActionRow({title: 'OpenAI-Api-Key'});
+    group.add(openAiApiKeyRow);
 
     const openaiApiKey = new Gtk.Entry({
         hexpand: true
@@ -30,8 +29,22 @@ function fillPreferencesWindow(window) {
 
     settings.bind("openai-api-key", openaiApiKey, 'text', Gio.SettingsBindFlags.DEFAULT);
 
-    row.add_suffix(openaiApiKey);
-    row.activatable_widget = openaiApiKey;
+    openAiApiKeyRow.add_suffix(openaiApiKey);
+    openAiApiKeyRow.activatable_widget = openaiApiKey;
+
+    const systemPromptRow = new Adw.ActionRow({title: 'System Prompt (optional)'});
+    group.add(systemPromptRow);
+
+    const systemPrompt = new Gtk.Entry({
+        hexpand: true
+    });
+
+    systemPrompt.text = settings.get_string("system-prompt");
+
+    settings.bind("system-prompt", systemPrompt, 'text', Gio.SettingsBindFlags.DEFAULT);
+
+    systemPromptRow.add_suffix(systemPrompt);
+    systemPromptRow.activatable_widget = systemPrompt;
 
     const debugModeRow = new Adw.ActionRow({ title: 'Debug Mode' });
     group.add(debugModeRow);

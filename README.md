@@ -13,6 +13,7 @@ However, if you don't have an API token or would rather not use one, there is an
 - Supports Light/Dark Mode
 - Settings UI
 - Clear History (Shortcut: CTRL+L)
+- Optional System Prompt (Initial prompt for all questions)
 
 ## Install From Source
 This method installs to your `~/.local/share/gnome-shell/extensions` directory from the latest source code on the main branch.
