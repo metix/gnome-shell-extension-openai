@@ -45,7 +45,7 @@ var ChatMessage = GObject.registerClass(
                 reactive: true
             })
 
-            this.connect('key-press-event', (object, event) => {
+            this._text.connect('key-press-event', (object, event) => {
                 let code = event.get_key_code();
                 let state = event.get_state();
 
@@ -80,10 +80,26 @@ var ChatMessage = GObject.registerClass(
 
 var Overlay = class Overlay {
 
-    constructor() {
+    constructor(indicator) {
+        this.indicator = indicator;
+
         this.overlay = new St.BoxLayout({
             style_class: 'modal-dialog',
-            vertical: true
+            vertical: true,
+            reactive: true
+        });
+
+        this.overlay.connect('key-press-event', (object, event) => {
+            let code = event.get_key_code();
+            let state = event.get_state();
+
+            // close overlay if ESC is pressed
+            if (state === 0 && code === 9) {
+                this.indicator._onTogglePress();
+                return true;
+            }
+
+            return false;
         });
 
         this.overlay.width = OVERLAY_WIDTH;
