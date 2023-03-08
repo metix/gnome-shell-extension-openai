@@ -80,6 +80,8 @@ function enable() {
 
     let settings = Utils.getSettings();
 
+    console.log("register shortcut");
+
     // register shortcut
     Main.wm.addKeybinding("shortcut-toggle-overlay", settings,
         Meta.KeyBindingFlags.NONE,

@@ -7,7 +7,7 @@
     </key>
 
     <key name="shortcut-toggle-overlay" type="as">
-      <default><![CDATA[['<Super>Space']]]></default>
+      <default><![CDATA[['<Super>g']]]></default>
     </key>
 
     <key name="system-prompt" type="s">
