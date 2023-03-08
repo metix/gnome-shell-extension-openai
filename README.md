@@ -82,3 +82,6 @@ The Extension was tested on:
 ```
 journalctl /usr/bin/gnome-shell
 ```
+
+## License
+This Extension has been released under The GNU General Public License v3.0.

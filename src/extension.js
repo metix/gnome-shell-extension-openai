@@ -16,14 +16,14 @@ const Utils = Me.imports.Utils;
 const INDICATOR_ICON = "face-smile-symbolic";
 const INDICATOR_ICON_HAPPY = "face-smile-big-symbolic";
 
-let chatGptIndicator;
+let indicator;
 let overlay;
 
-const ChatGptIndicator = GObject.registerClass(
-    class ChatGptIndicator extends PanelMenu.Button {
+const Indicator = GObject.registerClass(
+    class Indicator extends PanelMenu.Button {
 
         _init() {
-            super._init(0.0, "ChatGptIndicator");
+            super._init(0.0, "Indicator");
 
             let hbox = new St.BoxLayout();
 
@@ -40,11 +40,11 @@ const ChatGptIndicator = GObject.registerClass(
         _buildMenu() {
             let menuItemToggle = new PopupMenu.PopupMenuItem("Toggle");
             this.menu.addMenuItem(menuItemToggle);
-            menuItemToggle.connect("activate", this._onTogglePress);
+            menuItemToggle.connect("activate", this._onTogglePress.bind(this));
 
             let menuItemPrefs = new PopupMenu.PopupMenuItem("Settings");
             this.menu.addMenuItem(menuItemPrefs);
-            menuItemPrefs.connect("activate", this._onPrefsPress);
+            menuItemPrefs.connect("activate", this._onPrefsPress.bind(this));
         }
 
         _onTogglePress() {
@@ -75,8 +75,8 @@ function enable() {
     overlay = new Overlay();
 
     // indicator in the status-menu
-    chatGptIndicator = new ChatGptIndicator();
-    Main.panel.addToStatusArea("ChatGptIndicator", chatGptIndicator, 1);
+    indicator = new Indicator();
+    Main.panel.addToStatusArea("ChatGptIndicator", indicator, 1);
 
     let settings = Utils.getSettings();
 
@@ -84,14 +84,14 @@ function enable() {
     Main.wm.addKeybinding("shortcut-toggle-overlay", settings,
         Meta.KeyBindingFlags.NONE,
         Shell.ActionMode.NORMAL,
-        chatGptIndicator._onTogglePress.bind(chatGptIndicator));
+        indicator._onTogglePress.bind(indicator));
 }
 
 function disable() {
-    chatGptIndicator.destroy();
+    indicator.destroy();
     overlay.destroy();
 
-    chatGptIndicator = null;
+    indicator = null;
     overlay = null;
 
     Main.wm.removeKeybinding("shortcut-toggle-overlay");
