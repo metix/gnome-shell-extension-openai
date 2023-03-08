@@ -12,6 +12,7 @@ const Me = ExtensionUtils.getCurrentExtension();
 const {Overlay} = Me.imports.Overlay;
 
 const INDICATOR_ICON = "face-smile-symbolic";
+const INDICATOR_ICON_HAPPY = "face-smile-big-symbolic";
 
 let chatGptIndicator;
 let overlay;
@@ -45,10 +46,14 @@ const ChatGptIndicator = GObject.registerClass(
         }
 
         _onTogglePress() {
-            if (overlay.isVisible())
+            if (overlay.isVisible()) {
                 overlay.hide();
-            else
+                this.icon.icon_name = INDICATOR_ICON;
+            }
+            else {
                 overlay.show();
+                this.icon.icon_name = INDICATOR_ICON_HAPPY;
+            }
         }
 
         _onPrefsPress() {
