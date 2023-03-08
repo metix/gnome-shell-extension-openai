@@ -1,4 +1,5 @@
 const {Soup} = imports.gi;
+const Gio = imports.gi.Gio;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -116,7 +117,7 @@ var OpenAiClient = class OpenAiClient {
                 message.set_request('application/json', 2, body);
                 httpSession.queue_message(message, () => processResponse(message));
             } else {
-                message.set_request_body_from_bytes('application/json', body);
+                message.set_request_body('application/json', Gio.MemoryInputStream.new_from_bytes(body));
                 httpSession.send_and_read_async(message, 0, null, (_httpSession, _message) => processResponse(message))
             }
         });
