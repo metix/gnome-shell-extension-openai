@@ -62,8 +62,4 @@ function fillPreferencesWindow(window) {
 
     // Add our page to the window
     window.add(page);
-
-    GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
-        window.close();
-    });
 }
