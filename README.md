@@ -77,7 +77,7 @@ The Extension was tested on:
 Feel free to contribute if you found bugs or improved something.
 
 ## FAQ
-##### Where can I get an OpenAI API-Key?
+#### Where can I get an OpenAI API-Key?
 First you need to create an Account on [OpenAI](https://openai.com/blog/openai-api).
 
 From your user profile, you can manage your API keys by selecting "Manage API Keys".
