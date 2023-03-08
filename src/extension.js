@@ -71,12 +71,12 @@ function init() {
 
 
 function enable() {
-    // the overlay which opens when shortcut is pressed
-    overlay = new Overlay();
-
     // indicator in the status-menu
     indicator = new Indicator();
     Main.panel.addToStatusArea("ChatGptIndicator", indicator, 1);
+
+    // the overlay which opens when shortcut is pressed
+    overlay = new Overlay(indicator);
 
     let settings = Utils.getSettings();
 
