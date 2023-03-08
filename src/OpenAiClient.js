@@ -1,3 +1,5 @@
+imports.gi.versions.Soup = '2.4';
+
 const {Soup} = imports.gi;
 
 const ExtensionUtils = imports.misc.extensionUtils;
