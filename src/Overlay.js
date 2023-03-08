@@ -123,7 +123,7 @@ var Overlay = class Overlay {
         if (showWelcomeBanner) {
             this._appendChatMessage("Welcome to OpenAI GNOME Extension.");
             let token = Utils.getSettings().get_string("openai-api-key");
-            if (token.length === '')
+            if (token.length === 0)
                 this._appendChatMessage("You need a API-Key to use this extension. Please open settings dialog (or type ':settings') and paste your API-Key.");
             this._appendChatMessage("Shortcuts:\n" +
                 "- CTRL + L\tClear History\n" +
