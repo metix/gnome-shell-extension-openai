@@ -59,7 +59,7 @@ ${body}`)
 
     _saveChat(question, answer) {
         this.chatHistory.push({role: "user", content: question})
-        this.chatHistory.push({role: "system", content: answer})
+        this.chatHistory.push({role: "assistant", content: answer})
     }
 
     _loadJsonAsync(url, body) {
