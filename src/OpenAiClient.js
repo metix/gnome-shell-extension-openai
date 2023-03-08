@@ -1,5 +1,3 @@
-imports.gi.versions.Soup = '2.4';
-
 const {Soup} = imports.gi;
 
 const ExtensionUtils = imports.misc.extensionUtils;
@@ -8,6 +6,8 @@ const Utils = Me.imports.Utils;
 
 const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
 const OPENAI_MODEL = "gpt-3.5-turbo"
+
+const oldSoup = Soup.get_major_version() === 2;
 
 var OpenAiClient = class OpenAiClient {
 
@@ -93,24 +93,32 @@ var OpenAiClient = class OpenAiClient {
                 `Bearer ${token}`
             )
 
-            message.set_request('application/json', 2, body);
-
-            httpSession.queue_message(message, () => {
-                if (message.status_code == 200) {
-                    try {
-                        let out = JSON.parse(message['response-body'].data);
-                        resolve(out);
-                    } catch (error) {
-                        reject(error);
-                    }
-                } else {
-                    if (message.status_code == 401) {
-                        reject("request failed: " + message.status_code + "\nDid you provide your OpenAI-API-Key? (Open Settings)");
+            function processResponse(message) {
+                {
+                    if (message.status_code == 200) {
+                        try {
+                            let out = JSON.parse(message['response-body'].data);
+                            resolve(out);
+                        } catch (error) {
+                            reject(error);
+                        }
                     } else {
-                        reject("request failed: " + message.status_code);
+                        if (message.status_code == 401) {
+                            reject("request failed: " + message.status_code + "\nDid you provide your OpenAI-API-Key? (Open Settings)");
+                        } else {
+                            reject("request failed: " + message.status_code);
+                        }
                     }
                 }
-            });
+            }
+
+            if (oldSoup) {
+                message.set_request('application/json', 2, body);
+                httpSession.queue_message(message, () => processResponse(message));
+            } else {
+                message.set_request_body_from_bytes('application/json', body);
+                httpSession.send_and_read_async(message, 0, null, (_httpSession, _message) => processResponse(message))
+            }
         });
     }
 }
