@@ -6,6 +6,7 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
 function init() {
+
 }
 
 function fillPreferencesWindow(window) {
@@ -46,11 +47,11 @@ function fillPreferencesWindow(window) {
     systemPromptRow.add_suffix(systemPrompt);
     systemPromptRow.activatable_widget = systemPrompt;
 
-    const debugModeRow = new Adw.ActionRow({ title: 'Debug Mode' });
+    const debugModeRow = new Adw.ActionRow({title: 'Debug Mode'});
     group.add(debugModeRow);
 
     const debugModeToggle = new Gtk.Switch({
-        active: settings.get_boolean ('debug-mode'),
+        active: settings.get_boolean('debug-mode'),
         valign: Gtk.Align.CENTER,
     });
     settings.bind('debug-mode', debugModeToggle, 'active', Gio.SettingsBindFlags.DEFAULT);
@@ -61,4 +62,8 @@ function fillPreferencesWindow(window) {
 
     // Add our page to the window
     window.add(page);
+
+    GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+        window.close();
+    });
 }
