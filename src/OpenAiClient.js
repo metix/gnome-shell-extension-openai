@@ -1,6 +1,4 @@
-const {Soup} = imports.gi;
-const Gio = imports.gi.Gio;
-
+const Soup = imports.gi.Soup;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const Utils = Me.imports.Utils;
@@ -8,7 +6,16 @@ const Utils = Me.imports.Utils;
 const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
 const OPENAI_MODEL = "gpt-3.5-turbo"
 
-const oldSoup = Soup.get_major_version() === 2;
+let httpClient;
+
+// we have to use the soup version that is already loaded from gnome shell.
+// we cant specify the version.
+// to support both soup-2.4 and soup-3.0 we check the version and use different implementations
+if (Soup.get_major_version() === 2) {
+    httpClient = Me.imports.HttpClientV1;
+} else {
+    httpClient = Me.imports.HttpClientV2;
+}
 
 var OpenAiClient = class OpenAiClient {
 
@@ -84,42 +91,15 @@ var OpenAiClient = class OpenAiClient {
                 return;
             }
 
-            let httpSession = new Soup.Session();
-            let message = Soup.Message.new('POST', url);
-
             let token = Utils.getSettings().get_string("openai-api-key");
 
-            message.request_headers.append(
-                'Authorization',
-                `Bearer ${token}`
-            )
+            let headers = {
+                'Authorization': `Bearer ${token}`
+            };
 
-            function processResponse(message) {
-                {
-                    if (message.status_code == 200) {
-                        try {
-                            let out = JSON.parse(message['response-body'].data);
-                            resolve(out);
-                        } catch (error) {
-                            reject(error);
-                        }
-                    } else {
-                        if (message.status_code == 401) {
-                            reject("request failed: " + message.status_code + "\nDid you provide your OpenAI-API-Key? (Open Settings)");
-                        } else {
-                            reject("request failed: " + message.status_code);
-                        }
-                    }
-                }
-            }
-
-            if (oldSoup) {
-                message.set_request('application/json', 2, body);
-                httpSession.queue_message(message, () => processResponse(message));
-            } else {
-                message.set_request_body('application/json', Gio.MemoryInputStream.new_from_bytes(body));
-                httpSession.send_and_read_async(message, 0, null, (_httpSession, _message) => processResponse(message))
-            }
+            httpClient.post(url, headers, body)
+                .then(resolve)
+                .catch(reject);
         });
     }
 }

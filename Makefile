@@ -2,7 +2,7 @@
 
 UUID = $(shell grep -E '^[ ]*"uuid":' ./metadata.json | sed 's@^[ ]*"uuid":[ ]*"\(.\+\)",[ ]*@\1@')
 BASE_MODULES = metadata.json
-SRC_MODULES = extension.js prefs.js OpenAiClient.js Overlay.js Utils.js stylesheet.css
+SRC_MODULES = extension.js prefs.js OpenAiClient.js Overlay.js Utils.js stylesheet.css HttpClientV1.js HttpClientV2.js
 ifeq ($(strip $(DESTDIR)),)
 INSTALLBASE = $(HOME)/.local/share/gnome-shell/extensions
 else
