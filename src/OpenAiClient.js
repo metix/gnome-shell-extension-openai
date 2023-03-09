@@ -23,39 +23,35 @@ var OpenAiClient = class OpenAiClient {
         this.chatHistory = [];
     }
 
-    ask(question) {
-        return new Promise((resolve, reject) => {
-            let systemPrompt = Utils.getSettings().get_string("system-prompt");
+    async ask(question) {
+        let systemPrompt = Utils.getSettings().get_string("system-prompt");
 
-            let messages;
-            if (systemPrompt.length > 0) {
-                messages = [
-                    {role: 'system', content: systemPrompt},
-                    ...this.chatHistory,
-                    {role: 'user', content: question}
-                ]
-            } else {
-                messages = [...this.chatHistory, {role: 'user', content: question}]
-            }
+        let messages;
+        if (systemPrompt.length > 0) {
+            messages = [
+                {role: 'system', content: systemPrompt},
+                ...this.chatHistory,
+                {role: 'user', content: question}
+            ]
+        } else {
+            messages = [...this.chatHistory, {role: 'user', content: question}]
+        }
 
-            let body = JSON.stringify({
-                model: OPENAI_MODEL,
-                messages: messages
-            });
-
-            this._loadJsonAsync(OPENAI_API_URL, body)
-                .then(data => {
-
-                    let answer = data.choices[0].message.content;
-
-                    // save question and answer in the chat-history, so that we can append the history
-                    // in the next question
-                    this._saveChat(question, answer);
-
-                    resolve(answer);
-                })
-                .catch(reject)
+        let body = JSON.stringify({
+            model: OPENAI_MODEL,
+            messages: messages
         });
+
+
+        let data = await this._apiCall(OPENAI_API_URL, body);
+
+        let answer = data.choices[0].message.content;
+
+        // save question and answer in the chat-history, so that we can append the history
+        // in the next question
+        this._saveChat(question, answer);
+
+        return answer;
     }
 
     clearHistory() {
@@ -67,39 +63,32 @@ var OpenAiClient = class OpenAiClient {
         this.chatHistory.push({role: "assistant", content: answer})
     }
 
-    _loadJsonAsync(url, body) {
-        return new Promise((resolve, reject) => {
+    async _apiCall(url, body) {
+        let debugMode = Utils.getSettings().get_boolean("debug-mode");
 
-            let debugMode = Utils.getSettings().get_boolean("debug-mode");
+        if (debugMode) {
+            let parsedBody = JSON.parse(body);
+            let debugMessage = `Hi, I am not chat-GPT i'm just a test response.`;
+            if (parsedBody.messages[parsedBody.messages.length - 1].content === ':body')
+                debugMessage = body;
 
-            if (debugMode) {
-                let parsedBody = JSON.parse(body);
-                let debugMessage = `Hi, I am not chat-GPT i'm just a test response.`;
-                if (parsedBody.messages[parsedBody.messages.length - 1].content === ':body')
-                    debugMessage = body;
+            await new Promise(resolve => setTimeout(resolve, 500));
 
-                setTimeout(() => {
-                    resolve({
-                        choices: [{
-                            message: {
-                                content: debugMessage
-                            }
-                        }]
-                    })
-                }, 500)
-
-                return;
-            }
-
-            let token = Utils.getSettings().get_string("openai-api-key");
-
-            let headers = {
-                'Authorization': `Bearer ${token}`
+            return {
+                choices: [{
+                    message: {
+                        content: debugMessage
+                    }
+                }]
             };
+        }
 
-            httpClient.post(url, headers, body)
-                .then(resolve)
-                .catch(reject);
-        });
+        let token = Utils.getSettings().get_string("openai-api-key");
+
+        let headers = {
+            'Authorization': `Bearer ${token}`
+        };
+
+        return await httpClient.post(url, headers, body);
     }
 }
