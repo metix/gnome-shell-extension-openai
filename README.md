@@ -13,7 +13,6 @@ This is a simple extension that uses the OpenAI API to display a ChatGPT Overlay
 
 `Super + G`.
 
-
 Note: API-Key is required for this extension.
 If you look for an extension without API-Key you can
 use [this one](https://github.com/HorrorPills/ChatGPT-Gnome-Desktop-Extension)
@@ -68,6 +67,16 @@ Show the overlay with the shortcut:
 -> Super+G to show the overlay
 ```
 
+## Settings
+
+You can configure some settings in the UI:
+
+| Name          | Example Value               | Description                                                                                                                                                                                                                           |
+|---------------|-----------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Open-Api-Key  | sk-a3e4ea904daa31150934fe   | Your Openapi-Key                                                                                                                                                                                                                      |
+| System-Prompt | Act as a Stackoverflow post | The initial message which is added before each conversation. ([Read more about it here](https://platform.openai.com/docs/guides/chat/instructing-chat-models)).<br> It is sent in the background and will not be visible in your Chat |
+| Debug-Mode    | false                       | Only for development use. If enabled, no API calls are made. Instead a placeholder message is shown as response.                                                                                                                      |
+
 ## Compatibility
 
 The Extension was tested on:
@@ -78,7 +87,9 @@ The Extension was tested on:
 Feel free to contribute if you found bugs or improved something.
 
 ## FAQ
+
 #### Where can I get an OpenAI API-Key?
+
 First you need to create an Account on [OpenAI](https://openai.com/blog/openai-api).
 
 From your user profile, you can manage your API keys by selecting "Manage API Keys".
@@ -93,4 +104,5 @@ journalctl /usr/bin/gnome-shell
 ```
 
 ## License
+
 This Extension has been released under The GNU General Public License v3.0.
