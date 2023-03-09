@@ -72,7 +72,8 @@ Show the overlay with the shortcut:
 
 The Extension was tested on:
 
-- Ubuntu 22.04 with X11
+- Ubuntu 22.04, X11, GNOME Shell 42.5
+- Ubuntu 23.04, Wayland, GNOME Shell 43.2
 
 Feel free to contribute if you found bugs or improved something.
 
