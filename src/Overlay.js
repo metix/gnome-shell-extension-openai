@@ -83,6 +83,9 @@ var Overlay = class Overlay {
     constructor(indicator) {
         this.indicator = indicator;
 
+        this.questionHistory = [];
+        this.questionHistoryIndex = 0;
+
         this.overlay = new St.BoxLayout({
             style_class: 'modal-dialog',
             vertical: true,
@@ -154,7 +157,19 @@ var Overlay = class Overlay {
 
             // Ctrl + L
             if (state === 4 && code === 46) {
-                this._onClearHistoryPress();
+                this._onClearChatHistoryPress();
+                return true;
+            }
+
+            // UP
+            if (state === 0 && code === 111) {
+                this._chatHistoryScroll(1);
+                return true;
+            }
+
+            // DOWN
+            if (state === 0 && code === 116) {
+                this._chatHistoryScroll(-1);
                 return true;
             }
         });
@@ -206,7 +221,7 @@ var Overlay = class Overlay {
             style_class: 'button'
         });
 
-        this.btnClearHistory.connect('button-press-event', this._onClearHistoryPress.bind(this));
+        this.btnClearHistory.connect('button-press-event', this._onClearChatHistoryPress.bind(this));
 
         this.menuRow.add_child(this.btnClearHistory);
 
@@ -218,6 +233,9 @@ var Overlay = class Overlay {
         this.loadingSpinner.queue_relayout();
 
         let question = this.inputQuestion.text;
+
+        this.questionHistory.push(question);
+        this.questionHistoryIndex = 0;
 
         if (question === ':settings') {
             this.inputQuestion.set_text("");
@@ -256,12 +274,31 @@ var Overlay = class Overlay {
         Util.ensureActorVisibleInScrollView(this.chatRow, chatEntry);
     }
 
-    _onClearHistoryPress() {
+    _onClearChatHistoryPress() {
         this.inputQuestion.set_text("");
         openaiClient.clearHistory();
         let chats = this.chatContainer.get_children();
 
         chats.forEach(c => this.chatContainer.remove_child(c));
+    }
+
+    _chatHistoryScroll(delta) {
+        if ((this.questionHistoryIndex + delta) <= 0) {
+            this.inputQuestion.set_text("");
+            this.questionHistoryIndex = 0;
+            return;
+        }
+
+        if ((this.questionHistoryIndex + delta) > this.questionHistory.length)
+            return;
+
+        this.questionHistoryIndex += delta;
+
+        let index = this.questionHistory.length - this.questionHistoryIndex;
+
+        let question = this.questionHistory[index];
+
+        this.inputQuestion.set_text(question);
     }
 
     show() {

@@ -1,5 +1,5 @@
 /**
- * This HttpClient expects Soup-2.4
+ * Code for Soup-2.4
  */
 
 const Soup = imports.gi.Soup;

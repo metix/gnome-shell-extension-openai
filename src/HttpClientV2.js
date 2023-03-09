@@ -1,5 +1,5 @@
 /**
- * This HttpClient expects Soup-3.0
+ * Code for Soup-3.0
  */
 
 const GLib = imports.gi.GLib;
