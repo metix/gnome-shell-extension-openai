@@ -2,7 +2,7 @@
  * This HttpClient expects Soup-3.0
  */
 
-const Glib = imports.gi.Glib;
+const GLib = imports.gi.GLib;
 const Soup = imports.gi.Soup;
 
 async function post(url, headers, body) {
@@ -13,7 +13,7 @@ async function post(url, headers, body) {
         message.request_headers.append(name, value);
     }
 
-    message.set_request_body_from_bytes('application/json', new Glib.Bytes(body));
+    message.set_request_body_from_bytes('application/json', new GLib.Bytes(body));
 
     let json;
     try {

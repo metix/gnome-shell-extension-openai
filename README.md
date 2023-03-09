@@ -68,7 +68,7 @@ Show the overlay with the shortcut:
 -> Super+G to show the overlay
 ```
 
-## Support
+## Compatibility
 
 The Extension was tested on:
 
