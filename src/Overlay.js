@@ -85,6 +85,7 @@ var Overlay = class Overlay {
 
         this.questionHistory = [];
         this.questionHistoryIndex = 0;
+        this.isLoading = false;
 
         this.overlay = new St.BoxLayout({
             style_class: 'modal-dialog',
@@ -229,10 +230,15 @@ var Overlay = class Overlay {
     }
 
     _onQuestionEnter() {
+        let question = this.inputQuestion.text;
+
+        if (question.length === 0 || this.isLoading) {
+            return;
+        }
+
+        this.isLoading = true;
         this.loadingSpinner.set_icon_name(ICON_LOADING);
         this.loadingSpinner.queue_relayout();
-
-        let question = this.inputQuestion.text;
 
         this.questionHistory.push(question);
         this.questionHistoryIndex = 0;
@@ -256,6 +262,7 @@ var Overlay = class Overlay {
             this._appendChatMessage("Error while try to access OpenAI: " + error);
         }).finally(() => {
             this.loadingSpinner.set_icon_name(ICON_LOADING_FINISHED);
+            this.isLoading = false;
         })
     }
 
